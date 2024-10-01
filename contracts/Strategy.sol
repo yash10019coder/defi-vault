@@ -103,7 +103,8 @@ contract Strategy {
         uint256 rewards = stakingContract.claimRewards();
 
         // Split rewards into tokenA and tokenB
-        address;
+         address[] memory path = new address[](2);
+        
         path[0] = address(rewardToken);
         path[1] = tokenA; // Assume reward token can be swapped for tokenA
 

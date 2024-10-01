@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract UniswapV2Factory is Ownable {
     address public feeTo;
     address public feeToSetter;
+    address public ownerAddress;
 
     // Mapping to store all created pairs and their address
     mapping(address => mapping(address => address)) public getPair;
@@ -14,7 +15,7 @@ contract UniswapV2Factory is Ownable {
 
     event PairCreated(address indexed token0, address indexed token1, address pair, uint256);
 
-    constructor(address _feeToSetter) {
+    constructor(address _feeToSetter) Ownable(ownerAddress) {
         feeToSetter = _feeToSetter;
     }
 
