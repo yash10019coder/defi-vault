@@ -117,7 +117,7 @@ contract UniswapV2Router {
         amounts = new uint256[](path.length);
         amounts[0] = amountIn;
         for (uint256 i; i < path.length - 1; i++) {
-            address pair = UniswapV2Factory(factory).getPair(path[i], path[i + 1]);
+            // address pair = UniswapV2Factory(factory).getPair(path[i], path[i + 1]);
             (uint256 reserveIn, uint256 reserveOut) = _getReserves(path[i], path[i + 1]);
             amounts[i + 1] = _getAmountOut(amounts[i], reserveIn, reserveOut);
         }
@@ -128,7 +128,7 @@ contract UniswapV2Router {
         amounts = new uint256[](path.length);
         amounts[amounts.length - 1] = amountOut;
         for (uint256 i = path.length - 1; i > 0; i--) {
-            address pair = UniswapV2Factory(factory).getPair(path[i - 1], path[i]);
+            // address pair = UniswapV2Factory(factory).getPair(path[i - 1], path[i]);
             (uint256 reserveIn, uint256 reserveOut) = _getReserves(path[i - 1], path[i]);
             amounts[i - 1] = _getAmountIn(amounts[i], reserveIn, reserveOut);
         }
