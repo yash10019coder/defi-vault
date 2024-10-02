@@ -33,8 +33,8 @@ contract UniswapV2Router {
         IERC20(tokenA).safeTransferFrom(msg.sender, pair, amountA);
         IERC20(tokenB).safeTransferFrom(msg.sender, pair, amountB);
 
-        // Mint liquidity provider (LP) tokens to the user
-        liquidity = UniswapV2Pair(pair).mint(msg.sender);
+        // Call mint inside the pair to issue LP tokens
+        liquidity = UniswapV2Pair(pair).addLiquidity(amountA, amountB, msg.sender);
     }
 
     /// @notice Removes liquidity from a pair, returning tokens to the user
@@ -47,14 +47,10 @@ contract UniswapV2Router {
         require(pair != address(0), "UniswapV2Router: PAIR_NOT_EXISTS");
 
         // Transfer the LP tokens from the user to the pair contract
-        UniswapV2Pair(pair).transferFrom(msg.sender, pair, liquidity);
+        IERC20(pair).safeTransferFrom(msg.sender, pair, liquidity);
 
-        // Burn the LP tokens and get the amounts of tokenA and tokenB
-        (amountA, amountB) = UniswapV2Pair(pair).burn(msg.sender);
-
-        // Transfer the underlying tokens back to the user
-        IERC20(tokenA).safeTransfer(msg.sender, amountA);
-        IERC20(tokenB).safeTransfer(msg.sender, amountB);
+        // Call burn inside the pair to remove liquidity
+        (amountA, amountB) = UniswapV2Pair(pair).removeLiquidity(msg.sender);
     }
 
     /// @notice Swap an exact amount of input tokens for output tokens
@@ -72,30 +68,11 @@ contract UniswapV2Router {
         // Transfer input token to the first pair
         IERC20(path[0]).safeTransferFrom(msg.sender, UniswapV2Factory(factory).getPair(path[0], path[1]), amounts[0]);
 
-        // Swap tokens along the path
+        // Perform the swap along the path
         _swap(amounts, path, msg.sender);
     }
 
-    /// @notice Swap an exact amount of output tokens for input tokens
-    function swapTokensForExactTokens(
-        uint256 amountOut,
-        uint256 amountInMax,
-        address[] calldata path
-    ) external returns (uint256[] memory amounts) {
-        require(path.length >= 2, "UniswapV2Router: INVALID_PATH");
-
-        amounts = _getAmountsIn(amountOut, path);
-
-        require(amounts[0] <= amountInMax, "UniswapV2Router: EXCESSIVE_INPUT_AMOUNT");
-
-        // Transfer input token to the first pair
-        IERC20(path[0]).safeTransferFrom(msg.sender, UniswapV2Factory(factory).getPair(path[0], path[1]), amounts[0]);
-
-        // Swap tokens along the path
-        _swap(amounts, path, msg.sender);
-    }
-
-    /// @dev Internal function for adding liquidity to a pair
+    /// @notice Internal function for adding liquidity to a pair
     function _addLiquidity(
         address tokenA,
         address tokenB,

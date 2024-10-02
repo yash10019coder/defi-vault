@@ -43,4 +43,12 @@ contract CustomStaking is ReentrancyGuard {
         uint timeStaked = block.timestamp - rewards[_user];
         return stakedBalances[_user] * rewardRate * timeStaked;
     }
+
+    function balanceOf(address _user) external view returns (uint) {
+        return stakedBalances[_user];
+    }
+
+    function getTotalRewards() external view returns (uint) {
+        return rewardToken.balanceOf(address(this));
+    }
 }

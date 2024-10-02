@@ -1,0 +1,25 @@
+{
+  "name": "defi-vault",
+  "version": "1.0.0",
+  "description": "REMIX DEFAULT WORKSPACE",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yash10019coder/defi-vault.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yash10019coder/defi-vault/issues"
+  },
+  "homepage": "https://github.com/yash10019coder/defi-vault#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
+  }
+}
