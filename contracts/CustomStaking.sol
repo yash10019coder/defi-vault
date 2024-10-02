@@ -33,10 +33,11 @@ contract CustomStaking is ReentrancyGuard {
         rewardToken.transfer(msg.sender, reward);
     }
 
-    function claimRewards() external nonReentrant {
+    function claimRewards() external nonReentrant returns (uint) {
         uint reward = calculateReward(msg.sender);
         rewards[msg.sender] = 0;
         rewardToken.transfer(msg.sender, reward);
+        return reward;
     }
 
     function calculateReward(address _user) public view returns (uint) {

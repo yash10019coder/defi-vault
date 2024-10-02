@@ -48,10 +48,10 @@ contract Strategy {
         (uint256 amountDepositedA, uint256 amountDepositedB, uint256 liquidity) = router.addLiquidity(tokenA, tokenB, amountA, amountB);
 
         // Mint shares to the user using ERC4626 vault
-        vault.deposit(liquidity, msg.sender);
+        vault.deposit(amountDepositedA,amountDepositedB);
 
         // Approve staking contract to spend LP tokens
-        IERC20(vault.totalAssets()()).approve(address(stakingContract), liquidity);
+        IERC20(vault).approve(address(stakingContract), liquidity);
 
         // Stake LP tokens in the staking contract
         stakingContract.stake(liquidity);
@@ -60,13 +60,15 @@ contract Strategy {
     /// @notice Withdraw assets from the vault, unstake LP tokens, and remove liquidity from Uniswap V2
     function withdraw(uint256 shares) external {
         // Burn shares in the vault and get proportional LP tokens
-        uint256 lpTokens = vault.withdraw(shares, msg.sender);
+        (uint256 amountWithdrawnA,uint256 amountWithdrawnB) = vault.withdraw(shares);
+
+        uint256 lpTokens= amountWithdrawnA+amountWithdrawnB;
 
         // Unstake LP tokens from the staking contract
         stakingContract.unstake(lpTokens);
 
         // Approve Uniswap router to remove liquidity
-        IERC20(vault.totalAssets()).approve(address(router), lpTokens);
+        IERC20(vault).approve(address(router), lpTokens);
 
         // Remove liquidity from Uniswap V2
         (uint256 amountA, uint256 amountB) = router.removeLiquidity(tokenA, tokenB, lpTokens);
@@ -91,7 +93,7 @@ contract Strategy {
     /// @notice Allow users to claim their accrued rewards
     function claimRewards() external {
         // Fetch the user’s share of the rewards
-        uint256 userRewards = getUserRewards(msg.sender);
+        uint256 userRewards = this.getUserRewards(msg.sender);
 
         // Distribute rewards to the user
         rewardToken.safeTransfer(msg.sender, userRewards);
@@ -123,6 +125,6 @@ contract Strategy {
         (uint256 amountA, uint256 amountB, uint256 liquidity) = router.addLiquidity(tokenA, tokenB, swappedA, swappedB);
 
         // Mint shares to the user using ERC4626 vault
-        vault.deposit(liquidity, msg.sender);
+        vault.deposit(amountA,amountB);
     }
 }

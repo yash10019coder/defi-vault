@@ -34,7 +34,7 @@ contract UniswapV2Router {
         IERC20(tokenB).safeTransferFrom(msg.sender, pair, amountB);
 
         // Call mint inside the pair to issue LP tokens
-        liquidity = UniswapV2Pair(pair).addLiquidity(amountA, amountB, msg.sender);
+        liquidity = UniswapV2Pair(pair).addLiquidity(amountA, amountB);
     }
 
     /// @notice Removes liquidity from a pair, returning tokens to the user
