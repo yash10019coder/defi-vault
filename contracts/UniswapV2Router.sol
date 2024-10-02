@@ -50,7 +50,7 @@ contract UniswapV2Router {
         IERC20(pair).safeTransferFrom(msg.sender, pair, liquidity);
 
         // Call burn inside the pair to remove liquidity
-        (amountA, amountB) = UniswapV2Pair(pair).removeLiquidity(msg.sender);
+        (amountA, amountB) = UniswapV2Pair(pair).removeLiquidity(liquidity);
     }
 
     /// @notice Swap an exact amount of input tokens for output tokens
@@ -108,7 +108,7 @@ contract UniswapV2Router {
     /// @dev Internal function to get reserves for a token pair
     function _getReserves(address tokenA, address tokenB) internal view returns (uint256 reserveA, uint256 reserveB) {
         address pair = UniswapV2Factory(factory).getPair(tokenA, tokenB);
-        (uint256 reserve0, uint256 reserve1, ) = UniswapV2Pair(pair).getReserves();
+        (uint256 reserve0, uint256 reserve1) = UniswapV2Pair(pair).getReserves();
         (reserveA, reserveB) = tokenA < tokenB ? (reserve0, reserve1) : (reserve1, reserve0);
     }
 
