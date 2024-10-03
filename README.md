@@ -42,7 +42,7 @@ This project involves creating an advanced ERC4626-compliant vault that integrat
 │   └── test.js                // Test cases for contracts
 ├── .env                       // Environment variables
 ├── package.json               // NPM package configuration
-├── hardhat.config.js          // Hardhat configuration file
+├── hardhat.config.ts          // Hardhat configuration file
 └── README.md                  // Project documentation
 ```
 
@@ -117,7 +117,7 @@ This project involves creating an advanced ERC4626-compliant vault that integrat
 
 1. **Configure Test Network**
 
-   Ensure your Hardhat network configuration in `hardhat.config.js` is set up correctly for local or testnet testing.
+   Ensure your Hardhat network configuration in `hardhat.config.ts` is set up correctly for local or testnet testing.
 
 2. **Write Test Cases**
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "./UniswapV2Pair.sol"; // Assuming UniswapV2Pair.sol is in the same directory
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -15,8 +15,9 @@ contract UniswapV2Factory is Ownable {
 
     event PairCreated(address indexed token0, address indexed token1, address pair, uint256);
 
-    constructor(address _feeToSetter) Ownable(ownerAddress) {
+    constructor(address _feeToSetter,address _ownerAddress) Ownable(ownerAddress) {
         feeToSetter = _feeToSetter;
+        ownerAddress = _ownerAddress;
     }
 
     /// @notice Creates a pair for two tokens and returns the address of the pair contract

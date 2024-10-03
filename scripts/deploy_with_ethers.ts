@@ -2,9 +2,13 @@
 // Make sure to have ethers.js installed and configured
 // And the contract JSON ABI & Bytecode must be available after compiling them
 
-const { ethers } = require('ethers');
-const fs = require('fs');
-require('dotenv').config();
+import { ethers } from "ethers";
+
+import fs from "fs";
+
+import { config } from "dotenv";
+
+config();
 
 // Load compiled contract artifacts (ABI and Bytecode)
 function loadContract(contractName) {
