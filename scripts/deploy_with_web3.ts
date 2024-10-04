@@ -22,11 +22,21 @@ const deploy = async (contractName: string, args: Array<any>, from?: string, gas
     const web3 = new Web3(web3Provider);
     const accounts = await web3.eth.getAccounts();
     const contract = new web3.eth.Contract(require(`../artifacts/contracts/${contractName}.sol/${contractName}.json`).abi);
+    //generate 8 byte hex string for the input
+    // const input = web3.utils.bytesToHex(require(`../artifacts/contracts/${contractName}.sol/${contractName}.json`).bytecode).slice(0,17);
+    const input= accounts[0];
+
+    console.log(`Deploying ${contractName}...`);
+    console.log(`Contract input is: ${input}`);
     const deployedContract = await contract.deploy({
       data: require(`../artifacts/contracts/${contractName}.sol/${contractName}.json`).bytecode,
       arguments: args
     }).send({ from: from || accounts[0], gas: String(gas) || "" + 6721975 });
-    console.log(`${contractName} deployed at: ${deployedContract.options.address}`);
+    if (deployedContract.options.address) {
+      console.log(`${contractName} deployed at: ${deployedContract.options.address}`);
+    } else {
+      console.error(`Error deploying ${contractName} ${deployedContract}`);
+    }
     return deployedContract.options;
   } catch (e) {
     console.error(`Error during deployment: ${e.message}`);
@@ -38,6 +48,7 @@ const deploy = async (contractName: string, args: Array<any>, from?: string, gas
     let accounts: SignerWithAddress[] = await ethers.getSigners();
     console.log(`Accounts: ${accounts.map(account => account.address)}`);
     let ownerAddress: string = accounts[0].address;
+    let feeToSetter: string = accounts[1].address;
 
 
     // Deploy ERC20 Mock Tokens (if needed)
@@ -62,6 +73,9 @@ const deploy = async (contractName: string, args: Array<any>, from?: string, gas
     // Deploy ERC4626Vault contract (if you have it)
     const erc4626Vault = await deploy("ERC4626Vault", [mockToken1.address, mockToken2.address]); // Adjust args as necessary
     console.log(`ERC4626Vault deployed at: ${erc4626Vault.address}`);
+
+    // Deploy UniswapV2Factory contract (if you have it)
+    const uniswapFactory = await deploy("UniswapV2Factory", [feeToSetter,ownerAddress]);
 
     // Deploy UniswapV2Router contract (if you have it)
     const uniswapRouter = await deploy("UniswapV2Router", []); // Adjust args as necessary

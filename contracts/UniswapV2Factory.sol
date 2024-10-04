@@ -15,7 +15,7 @@ contract UniswapV2Factory is Ownable {
 
     event PairCreated(address indexed token0, address indexed token1, address pair, uint256);
 
-    constructor(address _feeToSetter,address _ownerAddress) Ownable(ownerAddress) {
+    constructor(address _feeToSetter,address _ownerAddress) Ownable(_ownerAddress) {
         feeToSetter = _feeToSetter;
         ownerAddress = _ownerAddress;
     }
